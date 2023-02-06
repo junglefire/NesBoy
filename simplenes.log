@@ -1,0 +1,10 @@
+[/Users/alex/Workshop/clang/NesBoy/src/Cartridge.cpp:52] Reading ROM from path: /Users/alex/Downloads/_ROM/Contra_U.nes
+[/Users/alex/Workshop/clang/NesBoy/src/Cartridge.cpp:70] Reading header, it dictates: 
+[/Users/alex/Workshop/clang/NesBoy/src/Cartridge.cpp:73] 16KB PRG-ROM Banks: 8
+[/Users/alex/Workshop/clang/NesBoy/src/Cartridge.cpp:81] 8KB CHR-ROM Banks: 0
+[/Users/alex/Workshop/clang/NesBoy/src/Cartridge.cpp:91] Name Table Mirroring: Vertical
+[/Users/alex/Workshop/clang/NesBoy/src/Cartridge.cpp:95] Mapper #: 2
+[/Users/alex/Workshop/clang/NesBoy/src/Cartridge.cpp:98] Extended (CPU) RAM: false
+[/Users/alex/Workshop/clang/NesBoy/src/Cartridge.cpp:112] ROM is NTSC compatible.
+[/Users/alex/Workshop/clang/NesBoy/src/Cartridge.cpp:133] Cartridge with CHR-RAM.
+[/Users/alex/Workshop/clang/NesBoy/src/MapperUxROM.cpp:14] Uses character RAM
