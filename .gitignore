@@ -15,8 +15,10 @@ tmp/
 temp/
 cmake_install.cmake
 logs/
+log/
 *.zip
 *.o
+*.log
 pkg/
 __pycache__/
 *.vcxproj

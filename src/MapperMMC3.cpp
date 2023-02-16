@@ -4,7 +4,7 @@
 namespace sn
 {
     MapperMMC3::MapperMMC3(Cartridge &cart, std::function<void()> interrupt_cb, std::function<void(void)> mirroring_cb) :
-    Mapper(cart, Mapper::MMC3),
+    Mapper(cart, MapperType::MMC3),
         m_targetRegister(0),
         m_prgBankMode(false),
         m_chrInversion(false),

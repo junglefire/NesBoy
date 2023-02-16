@@ -3,12 +3,8 @@
 
 namespace sn
 {
-    MapperUxROM::MapperUxROM(Cartridge &cart) :
-        Mapper(cart, Mapper::UxROM),
-        m_selectPRG(0)
-    {
-        if (cart.getVROM().size() == 0)
-        {
+    MapperUxROM::MapperUxROM(Cartridge &cart): Mapper(cart, MapperType::UxROM), m_selectPRG(0) {
+        if (cart.getVROM().size() == 0) {
             m_usesCharacterRAM = true;
             m_characterRAM.resize(0x2000);
             LOG(Info) << "Uses character RAM" << std::endl;

@@ -5,7 +5,7 @@ namespace sn
 {
 
     MapperColorDreams::MapperColorDreams(Cartridge &cart,std::function<void(void)> mirroring_cb) :
-        Mapper(cart, Mapper::ColorDreams),
+        Mapper(cart, MapperType::ColorDreams),
         m_mirroring(Vertical),
         m_mirroringCallback(mirroring_cb)
     {}

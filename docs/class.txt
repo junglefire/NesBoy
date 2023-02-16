@@ -1,0 +1,237 @@
+@startuml
+
+Emulator <-- MainBus
+Emulator <-- PictureBus
+Emulator <-- CPU
+Emulator <-- PPU
+Emulator <-- Cartridge
+Emulator <-- Mapper
+Emulator <-- Controller
+Emulator <-- VirtualScreen
+
+MainBus <-- CPU
+MainBus <-- Mapper
+
+PictureBus <-- PPU
+
+PPU <-- VirtualScreen
+
+enum IORegisters
+{
+    PPUCTRL = 0x2000
+    PPUMASK
+    PPUSTATUS
+    OAMADDR
+    OAMDATA
+    PPUSCROL
+    PPUADDR
+    PPUDATA
+    OAMDMA = 0x4014
+    JOY1 = 0x4016
+    JOY2 = 0x4017
+}
+
+class Emulator #pink
+{
+    +void run(string rom_path)
+    +void setVideoWidth(int width)
+    +void setVideoHeight(int height)
+    +void setVideoScale(float scale)
+    +void setKeys(vector<Keyboard::Key>& p1, vector<Keyboard::Key>& p2)
+    -void DMA(Byte page)
+    
+    -MainBus m_bus
+    -PictureBus m_pictureBus
+    -CPU m_cpu
+    -PPU m_ppu
+    -Cartridge m_cartridge
+    -unique_ptr<Mapper> m_mapper
+    -Controller m_controller1
+    -Controller m_controller2
+    -sf::RenderWindow m_window
+    -VirtualScreen m_emulatorScreen
+    -float m_screenScale
+    -TimePoint m_cycleTimer
+    -Duration m_elapsedTime
+    -NanoSeconds m_cpuCycleDuration
+}
+
+class Controller
+{
+    +void strobe(Byte b)
+    +Byte read()
+    +void setKeyBindings(const vector<sf::Keyboard::Key>& keys)
+    
+    -bool m_strobe
+    -unsigned int m_keyStates
+    -vector<sf::Keyboard::Key> m_keyBindings
+}
+
+class VirtualScreen
+{
+    +void create(unsigned int width, unsigned int height, float pixel_size, sf::Color color)
+    +void setPixel(size_t x, size_t y, sf::Color color)
+
+    -void draw(sf::RenderTarget& target, sf::RenderStates states)
+    -sf::Vector2u m_screenSize
+    -float m_pixelSize
+    -sf::VertexArray m_vertices
+}
+
+class MainBus
+{
+    +Byte read(Address addr)
+    +void write(Address addr, Byte value)
+    +bool setMapper(Mapper* mapper)
+    +bool setWriteCallback(IORegisters reg, WFunc callback)
+    +bool setReadCallback(IORegisters reg, RFunc callback)
+    +const Byte* getPagePtr(Byte page)
+
+    -vector<Byte> m_RAM
+    -vector<Byte> m_extRAM
+    -Mapper* m_mapper
+    -WFuncMap m_writeCallbacks
+    -RFuncMap m_readCallbacks
+}
+
+class PictureBus
+{
+    +Byte read(Address addr)
+    +void write(Address addr, Byte value)
+    +bool setMapper(Mapper* mapper)
+    +Byte readPalette(Byte paletteAddr)
+    +void updateMirroring()
+    +void scanlineIRQ()
+    
+    -size_t NameTable0
+    -size_t NameTable1
+    -size_t NameTable2
+    -size_t NameTable3
+    -vector<Byte> m_palette
+    -vector<Byte> m_RAM
+    -Mapper* m_mapper
+}
+
+class CPU
+{
+    +void step()
+    +void reset()
+    +void reset(Address start_addr)
+    +void log()
+    +Address getPC()
+    +void skipDMACycles()
+    +void interrupt(InterruptType type)
+    
+    -void interruptSequence(InterruptType type)
+    -bool executeImplied(Byte opcode)
+    -bool executeBranch(Byte opcode)
+    -bool executeType0(Byte opcode)
+    -bool executeType1(Byte opcode)
+    -bool executeType2(Byte opcode)
+    -Address readAddress(Address addr)
+    -void pushStack(Byte value)
+    -Byte pullStack()
+    -void setPageCrossed(Address a, Address b, int inc)
+    -void setZN(Byte value)
+    -int m_skipCycles
+    -int m_cycles
+    -Address r_PC
+    -Byte r_SP
+    -Byte r_A
+    -Byte r_X
+    -Byte r_Y
+    -bool f_C
+    -bool f_Z
+    -bool f_I
+    -bool f_D
+    -bool f_V
+    -bool f_N
+    -bool m_pendingNMI
+    -bool m_pendingIRQ
+    -MainBus &m_bus
+}
+
+class PPU
+{
+    +void step()
+    +void reset()
+    +void setInterruptCallback(function<void(void)> cb)
+    +void doDMA(const Byte* page_ptr)
+    +void control(Byte ctrl)
+    +void setMask(Byte mask)
+    +void setOAMAddress(Byte addr)
+    +void setDataAddress(Byte addr)
+    +void setScroll(Byte scroll)
+    +void setData(Byte data)
+    +Byte getStatus()
+    +Byte getData()
+    +Byte getOAMData()
+    +void setOAMData(Byte value)
+        
+    -Byte readOAM(Byte addr)
+    -void writeOAM(Byte addr, Byte value)
+    -Byte read(Address addr)
+    -PictureBus &m_bus
+    -VirtualScreen &m_screen
+    -function<void(void)> m_vblankCallback
+    -vector<Byte> m_spriteMemory
+    -vector<Byte> m_scanlineSprites
+    -enum State m_pipelineState
+    -int m_cycle
+    -int m_scanline
+    -bool m_evenFrame
+    -bool m_vblank
+    -bool m_sprZeroHit
+    -bool m_spriteOverflow
+    -Address m_dataAddress
+    -Address m_tempAddress
+    -Byte m_fineXScroll
+    -bool m_firstWrite
+    -Byte m_dataBuffer
+    -Byte m_spriteDataAddress
+    -bool m_longSprites
+    -bool m_generateInterrupt
+    -bool m_greyscaleMode
+    -bool m_showSprites
+    -bool m_showBackground
+    -bool m_hideEdgeSprites
+    -bool m_hideEdgeBackground
+    -enum CharacterPage m_bgPage
+    -enum CharacterPage m_sprPage
+    -Address m_dataAddrIncrement
+    -vector<vector<sf::Color>> m_pictureBuffer
+}
+
+class Cartridge
+{
+    +bool loadFromFile(string path)
+    +const vector<Byte>& getROM()
+    +const vector<Byte>& getVROM()
+    +Byte getMapper()
+    +Byte getNameTableMirroring()
+    +bool hasExtendedRAM()
+    
+    -vector<Byte> m_PRG_ROM
+    -vector<Byte> m_CHR_ROM
+    -Byte m_nameTableMirroring
+    -Byte m_mapperNumber
+    -bool m_extendedRAM
+    -bool m_chrRAM
+}
+
+abstract class Mapper
+{
+    +virtual void writePRG (Address addr, Byte value) = 0
+    +virtual Byte readPRG (Address addr) = 0
+    +virtual Byte readCHR (Address addr) = 0
+    +virtual void writeCHR (Address addr, Byte value) = 0
+    +virtual NameTableMirroring getNameTableMirroring()
+    +bool inline hasExtendedRAM()
+    +virtual void scanlineIRQ()
+    +Mapper* createMapper(Type mapper_t, Cartridge& cart, function<void()> interrupt_cb, function<void(void)> mirroring_cb)
+            
+    -Cartridge& m_cartridge
+    -Type m_type
+}
+
+@enduml

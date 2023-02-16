@@ -4,7 +4,7 @@ namespace sn
 {
 
     MapperGxROM::MapperGxROM(Cartridge &cart, std::function<void(void)> mirroring_cb) :
-        Mapper(cart, Mapper::GxROM),
+        Mapper(cart, MapperType::GxROM),
         m_mirroring(Vertical),
         m_mirroringCallback(mirroring_cb)
     {}

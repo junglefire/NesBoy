@@ -14,6 +14,7 @@ SET(LIBRARY_OUTPUT_PATH lib)
 
 ADD_DEFINITIONS(-DSIMPLE_MESSAGE)
 
+INCLUDE_DIRECTORIES(inc)
 INCLUDE_DIRECTORIES(pkg/include)
 
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/pkg/lib)
@@ -30,7 +31,7 @@ LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/pkg/lib)
 ###########################   application  ####################################
 ###############################################################################
 
-SET(NESBOY src/CPU.cpp src/Mapper.cpp src/MapperSxROM.cpp src/Cartridge.cpp src/MapperAxROM.cpp src/MapperUxROM.cpp src/Controller.cpp src/MapperCNROM.cpp src/PPU.cpp src/Emulator.cpp	src/MapperColorDreams.cpp src/PictureBus.cpp src/KeybindingsParser.cpp src/MapperGxROM.cpp src/VirtualScreen.cpp src/Log.cpp src/MapperMMC3.cpp src/main.cpp src/MainBus.cpp src/MapperNROM.cpp)
+SET(NESBOY app/main.cpp src/CPU.cpp src/Mapper.cpp src/MapperSxROM.cpp src/Cartridge.cpp src/MapperAxROM.cpp src/MapperUxROM.cpp src/Controller.cpp src/MapperCNROM.cpp src/PPU.cpp src/Emulator.cpp	src/MapperColorDreams.cpp src/PictureBus.cpp src/KeybindingsParser.cpp src/MapperGxROM.cpp src/VirtualScreen.cpp src/Log.cpp src/MapperMMC3.cpp src/MainBus.cpp src/MapperNROM.cpp)
 ADD_EXECUTABLE(nesboy ${NESBOY})
 TARGET_LINK_LIBRARIES(nesboy sfml-system sfml-audio sfml-network sfml-graphics sfml-window)
 

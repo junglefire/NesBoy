@@ -4,7 +4,7 @@
 namespace sn
 {
     MapperCNROM::MapperCNROM(Cartridge &cart) :
-        Mapper(cart, Mapper::CNROM),
+        Mapper(cart, MapperType::CNROM),
         m_selectCHR(0)
     {
         if (cart.getROM().size() == 0x4000) //1 bank

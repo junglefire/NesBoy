@@ -4,7 +4,7 @@
 namespace sn
 {
     MapperAxROM::MapperAxROM(Cartridge &cart, std::function<void(void)> mirroring_cb) :
-        Mapper(cart, Mapper::AxROM),
+        Mapper(cart, MapperType::AxROM),
         m_mirroring(OneScreenLower),
         m_mirroringCallback(mirroring_cb),
         m_prgBank(0)
