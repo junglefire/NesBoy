@@ -3,7 +3,8 @@
 
 NAMESPACE_BEGIN(sn)
 
-Cartridge::Cartridge() : m_nameTableMirroring(0), m_mapperNumber(0), m_extendedRAM(false) {
+Cartridge::Cartridge(): 
+	m_nameTableMirroring(0), m_mapperNumber(0), m_extendedRAM(false) {
 }
 
 const std::vector<Byte>& Cartridge::getROM() {
@@ -31,7 +32,7 @@ bool Cartridge::hasExtendedRAM() {
 bool Cartridge::loadFromFile(std::string path) {
 	std::ifstream romFile(path, std::ios_base::binary|std::ios_base::in);
 	if (!romFile) {
-		_error("Could not open ROM file from path: {}, path");
+		_error("Could not open ROM file from path: {}", path);
 		return false;
 	}
 
